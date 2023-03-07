@@ -1,16 +1,16 @@
 import random
 from colorama import Fore, Back, Style
 import os
+from trap import Trap
+from rooms import Rooms
+rooms = Rooms.rooms
 reset = Style.RESET_ALL
 red = Fore.RED
 green = Fore.GREEN
 yellow = Fore.YELLOW
 blue = Fore.BLUE
 
-
-# Define the player's starting stats
-os.system('clear')
-print(f"""{red}
+header = f"""{red}
 
                                                     ██████╗░██╗░░░██╗███╗░░██╗░██████╗░███████╗░█████╗░███╗░░██╗
                                                     ██╔══██╗██║░░░██║████╗░██║██╔════╝░██╔════╝██╔══██╗████╗░██║
@@ -18,14 +18,19 @@ print(f"""{red}
                                                     ██║░░██║██║░░░██║██║╚████║██║░░╚██╗██╔══╝░░██║░░██║██║╚████║
                                                     ██████╔╝╚██████╔╝██║░╚███║╚██████╔╝███████╗╚█████╔╝██║░╚███║
                                                     ╚═════╝░░╚═════╝░╚═╝░░╚══╝░╚═════╝░╚══════╝░╚════╝░╚═╝░░╚══╝
-{reset}""")
+{reset}"""
+
+
+# Define the player's starting stats
+os.system('clear')
+print(header)
 player_name = input(f"                                                                           {green}Enter your name:{Fore.CYAN}")
 
 player_health = 10000
 player_damage = 10
 player_gold = 1000
 player_weapon = "Dagger"
-player_anger = 0
+player_anger = 195
 player_xp = 0
 player_defense = 0
 os.system('clear')
@@ -78,15 +83,7 @@ boss = {
 
 # Define the game loop
 while True:
-    print(f"""{red}
-
-                                                    ██████╗░██╗░░░██╗███╗░░██╗░██████╗░███████╗░█████╗░███╗░░██╗
-                                                    ██╔══██╗██║░░░██║████╗░██║██╔════╝░██╔════╝██╔══██╗████╗░██║
-                                                    ██║░░██║██║░░░██║██╔██╗██║██║░░██╗░█████╗░░██║░░██║██╔██╗██║
-                                                    ██║░░██║██║░░░██║██║╚████║██║░░╚██╗██╔══╝░░██║░░██║██║╚████║
-                                                    ██████╔╝╚██████╔╝██║░╚███║╚██████╔╝███████╗╚█████╔╝██║░╚███║
-                                                    ╚═════╝░░╚═════╝░╚═╝░░╚══╝░╚═════╝░╚══════╝░╚════╝░╚═╝░░╚══╝
-{reset}""")
+    print(header)
     # Display the player's stats
     print(f"{reset}Char: {green}{player_name}{reset}")
     print(f"Health: {green}{player_health}{reset}")
@@ -104,58 +101,68 @@ while True:
     print(f"3. {red}Quit{reset}")
     choice = input("> ")
     os.system('clear')
-
+#
     if choice == "1":
         if player_anger <= 199:
+            print(header)
+            curr_room = random.choice(list(rooms))
             # Generate a random monster
             monster_name = random.choice(list(monsters.keys()))
             monster_health = monsters[monster_name]["health"]
             monster_damage = monsters[monster_name]["damage"]
             monster_gold = monsters[monster_name]["gold"]
 
-            print(f"\nYou encounter a {red}{monster_name}{reset}!")
+            traps = Trap.traps
+            trap_name = random.choice(list(traps.keys()))
+            trap_dmg = traps[trap_name]["damage"]
+            print(f"\nYou have entered {red}{curr_room}{reset}")
+            print("\nDo you want to:")
+            print(f"\n1. {blue}look around{reset}")
+            print('\nOr')
+            print(f"\n2. {blue}go back!{reset}")
+            choice = input('> ')
+            if choice == "1":
+                os.system('clear')
+                print(f"\nYou encounter a {red}{monster_name}{reset}!")
+                if random.random() < 0.2:
+                    print(f'You walked into a trap type: {red}{trap_name}{reset} and your health went down by {red}{trap_dmg}{reset}')
+                    player_health -= trap_dmg
 
-            # Fight the monster
-            while monster_health > 0 and player_health > 0:
-                print(f"""{red}
+                # Fight the monster
+                while monster_health > 0 and player_health > 0:
+                    print(header)
+                    print(f"\n: {red}{monster_name}{reset}")
+                    print(f"Health: {green}{monster_health}{reset}")
+                    print(f"Damage: {red}{monster_damage}{reset}")
+                    print(f"\n: {green}{player_name}{reset}")
+                    print(f"Health: {green}{player_health}{reset}")
+                    print(f"Damage: {red}{player_damage}{reset}")
 
-                                                    ██████╗░██╗░░░██╗███╗░░██╗░██████╗░███████╗░█████╗░███╗░░██╗
-                                                    ██╔══██╗██║░░░██║████╗░██║██╔════╝░██╔════╝██╔══██╗████╗░██║
-                                                    ██║░░██║██║░░░██║██╔██╗██║██║░░██╗░█████╗░░██║░░██║██╔██╗██║
-                                                    ██║░░██║██║░░░██║██║╚████║██║░░╚██╗██╔══╝░░██║░░██║██║╚████║
-                                                    ██████╔╝╚██████╔╝██║░╚███║╚██████╔╝███████╗╚█████╔╝██║░╚███║
-                                                    ╚═════╝░░╚═════╝░╚═╝░░╚══╝░╚═════╝░╚══════╝░╚════╝░╚═╝░░╚══╝
-{reset}""")
-                print(f"\n: {red}{monster_name}{reset}")
-                print(f"Health: {green}{monster_health}{reset}")
-                print(f"Damage: {red}{monster_damage}{reset}")
-                print(f"\n: {green}{player_name}{reset}")
-                print(f"Health: {green}{player_health}{reset}")
-                print(f"Damage: {red}{player_damage}{reset}")
+                    print("\nWhat would you like to do?")
+                    print(f"1. {red}Attack{reset}")
+                    print(f"2. {blue}Run{reset}")
+                    choice = input("> ")
 
-                print("\nWhat would you like to do?")
-                print(f"1. {red}Attack{reset}")
-                print(f"2. {blue}Run{reset}")
-                choice = input("> ")
-
-                if choice == "1":
-                    # Player attacks
-                    monster_health -= player_damage
-                    os.system('clear')
-                    print(f"You hit the {monster_name} for {player_damage} damage!")
-                    
-                    # Monster attacks
-                    if monster_health > 0:
-                        player_health -= monster_damage - player_defense 
+                    if choice == "1":
+                        # Player attacks
+                        monster_health -= player_damage
                         os.system('clear')
-                        print(f"The {red}{monster_name}{reset} hits you for {red}{monster_damage}{reset} damage!")
-                        print(f'Your {blue}armour{reset} absorbed {blue}{player_defense}{reset} of the {red}damage{reset}')
-                elif choice == "2":
-                    # Player runs away
-                    os.system('clear')
-                    print(f"You run away from the {red}{monster_name}{reset}!")
-                    break
-        # Boss Fight
+                        print(f"You hit the {monster_name} for {player_damage} damage!")
+                        
+                        # Monster attacks
+                        if monster_health > 0:
+                            player_health -= monster_damage - player_defense 
+                            os.system('clear')
+                            print(f"The {red}{monster_name}{reset} hits you for {red}{monster_damage}{reset} damage!")
+                            print(f'Your {blue}armour{reset} absorbed {blue}{player_defense}{reset} of the {red}damage{reset}')
+                    elif choice == "2":
+                        # Player runs away
+                        os.system('clear')
+                        print(f"You run away from the {red}{monster_name}{reset}!")
+                        break
+            elif choice == 2:
+                break
+            # Boss Fight
         elif player_anger == 200:
             monster_name = boss["name"]
             monster_health = boss["health"]
@@ -283,15 +290,7 @@ while True:
             break
 
     elif choice == "2":
-        print(f"""{red}
-
-                                                    ██████╗░██╗░░░██╗███╗░░██╗░██████╗░███████╗░█████╗░███╗░░██╗
-                                                    ██╔══██╗██║░░░██║████╗░██║██╔════╝░██╔════╝██╔══██╗████╗░██║
-                                                    ██║░░██║██║░░░██║██╔██╗██║██║░░██╗░█████╗░░██║░░██║██╔██╗██║
-                                                    ██║░░██║██║░░░██║██║╚████║██║░░╚██╗██╔══╝░░██║░░██║██║╚████║
-                                                    ██████╔╝╚██████╔╝██║░╚███║╚██████╔╝███████╗╚█████╔╝██║░╚███║
-                                                    ╚═════╝░░╚═════╝░╚═╝░░╚══╝░╚═════╝░╚══════╝░╚════╝░╚═╝░░╚══╝
-{reset}""")
+        print(header)
         # Display the available weapons and their prices
         print("\nAvailable Weapons:")
         for weapon, price in weapons.items():
@@ -327,7 +326,7 @@ while True:
             price = potions[choice]
             if player_gold >= price:
                 player_gold -= price
-                player_health += 10
+                player_health += 15
                 os.system('clear')
                 print(f"You bought a {blue}{choice}{reset}!")
         elif choice in perks.keys():
@@ -346,15 +345,7 @@ while True:
 
         # End the game
         os.system('clear')
-        print(f"""{red}
-
-                                                    ██████╗░██╗░░░██╗███╗░░██╗░██████╗░███████╗░█████╗░███╗░░██╗
-                                                    ██╔══██╗██║░░░██║████╗░██║██╔════╝░██╔════╝██╔══██╗████╗░██║
-                                                    ██║░░██║██║░░░██║██╔██╗██║██║░░██╗░█████╗░░██║░░██║██╔██╗██║
-                                                    ██║░░██║██║░░░██║██║╚████║██║░░╚██╗██╔══╝░░██║░░██║██║╚████║
-                                                    ██████╔╝╚██████╔╝██║░╚███║╚██████╔╝███████╗╚█████╔╝██║░╚███║
-                                                    ╚═════╝░░╚═════╝░╚═╝░░╚══╝░╚═════╝░╚══════╝░╚════╝░╚═╝░░╚══╝
-{reset}""")
+        print(header)
         print(f"{Fore.MAGENTA}Thanks for playing!{reset}")
         break
 
