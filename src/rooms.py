@@ -13,19 +13,3 @@ class Rooms:
         "The Mesmerizing Haunt",
         "The Nether Delves",
     }
-
-class Room:
-    def __init__(self,room_id,contents=[]):
-        self.room_id = room_id
-        self.contents = contents
-
-
-class Direction(Enum):
-    NORTH = "N"
-    SOUTH = "S"
-    EAST = "E"
-    WEST = "W"
-    NORTHEAST = "NE"
-    SOUTHEAST = "SE"
-    NORTHWEST = "NW"
-    SOUTHWEST = "SW"
